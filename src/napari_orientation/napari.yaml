@@ -1,57 +1,19 @@
 name: napari-orientation
 display_name: Orientation Analysis
 # use 'hidden' to remove plugin from napari hub search results
-visibility: public
+visibility: hidden #public
 # see https://napari.org/stable/plugins/technical_references/manifest.html#fields for valid categories
-# categories: []
+categories:  ["Image Processing"]
 contributions:
   commands:
-    - id: napari-orientation.get_reader
-      python_name: napari_orientation._reader:napari_get_reader
-      title: Open data with Orientation Analysis
-    - id: napari-orientation.write_multiple
-      python_name: napari_orientation._writer:write_multiple
-      title: Save multi-layer data with Orientation Analysis
-    - id: napari-orientation.write_single_image
-      python_name: napari_orientation._writer:write_single_image
-      title: Save image data with Orientation Analysis
-    - id: napari-orientation.make_sample_data
-      python_name: napari_orientation._sample_data:make_sample_data
-      title: Load sample data from Orientation Analysis
-    - id: napari-orientation.make_container_widget
-      python_name: napari_orientation:ImageThreshold
-      title: Make threshold Container widget
-    - id: napari-orientation.make_magic_widget
-      python_name: napari_orientation:threshold_magic_widget
-      title: Make threshold magic widget
-    - id: napari-orientation.make_function_widget
-      python_name: napari_orientation:threshold_autogenerate_widget
-      title: Make threshold function widget
-    - id: napari-orientation.make_qwidget
-      python_name: napari_orientation:ExampleQWidget
-      title: Make example QWidget
-  readers:
-    - command: napari-orientation.get_reader
-      accepts_directories: false
-      filename_patterns: ['*.npy']
-  writers:
-    - command: napari-orientation.write_multiple
-      layer_types: ['image*','labels*']
-      filename_extensions: []
-    - command: napari-orientation.write_single_image
-      layer_types: ['image']
-      filename_extensions: ['.npy']
-  sample_data:
-    - command: napari-orientation.make_sample_data
-      display_name: Orientation Analysis
-      key: unique_id.1
+    - id: napari-orientation.vector_field_widget
+      python_name: napari_orientation.orientation_field_widget:vector_field_widget
+      title: Generate vector-coded orientation image
+    - id: napari-orientation.statistics_widget
+      python_name: napari_orientation.orientation_field_widget:statistics_widget
+      title: Compute orientation metrics
   widgets:
-    - command: napari-orientation.make_container_widget
-      display_name: Container Threshold
-    - command: napari-orientation.make_magic_widget
-      display_name: Magic Threshold
-    - command: napari-orientation.make_function_widget
-      autogenerate: true
-      display_name: Autogenerate Threshold
-    - command: napari-orientation.make_qwidget
-      display_name: Example QWidget
+    - command: napari-orientation.vector_field_widget
+      display_name: Generate vector-coded image
+    - command: napari-orientation.statistics_widget
+      display_name: Compute orientation metrics

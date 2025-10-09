@@ -1,0 +1,23 @@
+[project]
+name = "napari-orientation"
+version = "0.0.1"
+classifiers = [
+    "Framework :: napari",
+]
+dependencies = ["napari"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml"]
+
+[project.entry-points."napari.manifest"]
+napari-orientation = "napari_orientation:napari.yaml"
