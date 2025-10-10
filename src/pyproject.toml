@@ -4,7 +4,10 @@ version = "0.0.1"
 classifiers = [
     "Framework :: napari",
 ]
-dependencies = ["napari"]
+dependencies = [
+    "napari",
+    "matplotlib",
+]
 
 [build-system]
 requires = ["setuptools", "wheel"]
