@@ -26,7 +26,7 @@ def test_statistics_widget(make_napari_viewer):
 
     my_widget = statistics_widget(viewer=viewer)
     
-    my_widget.single_frame = True
+    my_widget.single_frame.value = True
     my_widget._compute_colored_image()
 
     assert viewer.layers[1].data.shape == im_data.shape + (3,)
