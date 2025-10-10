@@ -670,7 +670,7 @@ def compute_energy(eigenval_field):
 
 
 def generate_colored_orientation_map(angle_map, image, coherency_map):
-    from matplotlib.colors import hsv_to_rgb
+    from skimage.color import hsv2rgb
 
     # Generate orientation angle map as Hue color overlaid on image
     # normalize to [0, 1]
@@ -683,7 +683,7 @@ def generate_colored_orientation_map(angle_map, image, coherency_map):
         np.max(image) - np.min(image)
     )  # Value
     # convert HSV to RGB
-    angle_map_rgb = hsv_to_rgb(hsvImage)
+    angle_map_rgb = hsv2rgb(hsvImage)
     angle_map_rgb = (angle_map_rgb * 255).astype(np.uint8)
 
     return angle_map_rgb
