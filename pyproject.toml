@@ -1,7 +1,7 @@
 [project]
 name = "napari-orientation"
 dynamic = ["version"]
-description = "A simple plugin to analyse orientation in napari"
+description = "A napari plugin to analyse local orientation in images"
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [
