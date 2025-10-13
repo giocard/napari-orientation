@@ -80,7 +80,7 @@ class statistics_widget(Container):
         )
 
         self.pixel_size = create_widget(
-            label="Pixel size", annotation=float, options={"value": 1.0}
+            label="Pixel size (\u03bcm)", annotation=float, options={'value': 1.0, 'step': 0.0001}
         )
 
         self.single_frame = create_widget(
@@ -90,7 +90,7 @@ class statistics_widget(Container):
         )
 
         self.sigma = create_widget(
-            label="Sigma smoothing", annotation=int, options={"value": 4}
+            label="Sigma smoothing", annotation=int, options={'value': 4}
         )
 
         self.btn_color = Button(text="Display Colored Orientation")
@@ -108,7 +108,7 @@ class statistics_widget(Container):
         self.btn_stats = Button(text="Compute statistics")
         self.btn_stats.clicked.connect(self._compute_statistics)
 
-        self.btn_savetab = Button(text="Save Table as cvs...")
+        self.btn_savetab = Button(text="Save Table as csv...")
         self.btn_savetab.clicked.connect(self._save_table)
 
         self.table_data = [
