@@ -54,8 +54,6 @@ def vector_field_widget(
         (1, 0, 2),
     )
 
-    # del angle_map, orientation_field, eigenval_field#
-
     return (
         vectors_field,
         {
@@ -120,8 +118,7 @@ class statistics_widget(Container):
                 "Curvature": "",
             }
         ]
-        #        self.headers = ["Frame", "Mean energy", "Mean coherence", "Correlation length (um)", "Curvature mean (1/um)"]
-        self.table = Table(self.table_data)  # ,self.headers)
+        self.table = Table(self.table_data)
 
         # append into/extend the container with your widgets
         self.extend(
@@ -139,7 +136,7 @@ class statistics_widget(Container):
                 self.btn_savetab,
             ]
         )
-        # self._viewer.window.add_dock_widget(self.table)
+
         return
 
     def _compute_colored_image(self):
@@ -400,7 +397,6 @@ class statistics_widget(Container):
                     self.table.set_value(timedata)
             if pbr.is_canceled:
                 show_info("Operation canceled!")
-                # del curvature_map, coherence_map
                 return None
 
         return
@@ -477,12 +473,6 @@ def compute_image_orientation_statistics(
         Correlation=f"{correlation_length}",
     )
 
-    # om.Frame = this_slice
-    # om.Energy = '' # to be implemented
-    # om.Curvature = np.mean(curvature_map)
-    # om.Coherence = np.mean(coherence_map)
-    # om.Correlation = '' # to be implemented
-
     return om
 
 
@@ -497,9 +487,6 @@ def compute_color_image(inimage, sigma=4):
     angle_map_rgb = generate_colored_orientation_map(
         angle_map, inimage, coherency_map
     )
-    # from napari.utils.notifications import show_info
-    # show_info(f'RGB map type: {angle_map_rgb.shape} / {angle_map_rgb.dtype}')
-    # del orientation_field, eigenval_field, coherency_map, angle_map
 
     return angle_map_rgb
 
@@ -522,8 +509,6 @@ def compute_coherence_image(inimage, sigma=4):
     )
     coherency_map = compute_coherence(eigenval_field)
 
-    # del orientation_field, eigenval_field
-
     return coherency_map
 
 
@@ -535,11 +520,9 @@ def compute_curvature_image(inimage, pixel=1, sigma=0):
     orientation_field, eigenval_field = compute_orientation_field(
         inimage, sigma=sigma
     )
-    # compute angle from orientation field
 
+    # compute curvature from orientation field
     curvature_map = compute_curvature(orientation_field, pixel=pixel)
-
-    # del orientation_field, eigenval_field
 
     return curvature_map
 
@@ -564,12 +547,9 @@ def fit_curvature_distribution(curvature_map):
     }
 
     # Fit exponential decay
-    # popt, _ = curve_fit(exp_decay2, bin_centers, hist, p0=(1, 1, 0))
-    # popt, _ = curve_fit(exp_decay, bin_centers, hist, p0=(1, 1))
     popt, _ = curve_fit(exp1_decay, bin_centers, hist, p0=(1))
 
     # Mean half-life of decay is ln(2)/b
-    # mean_curvature = np.log(2) / popt[1]
     mean_curvature = np.log(2) / popt[0]
 
     return mean_curvature, popt, curvature_distribution

@@ -9,34 +9,24 @@
 [![npe2](https://img.shields.io/badge/plugin-npe2-blue?link=https://napari.org/stable/plugins/index.html)](https://napari.org/stable/plugins/index.html)
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
 
-A napari plugin to analyse local orientation in images
+A napari plugin to analyse local orientation in images.
 
-----------------------------------
-
-This [napari] plugin was generated with [copier] using the [napari-plugin-template] (None).
-
-<!--
-Don't miss the full getting started guide to set up your new package:
-https://github.com/napari/napari-plugin-template#getting-started
-
-and review the napari docs for plugin developers:
-https://napari.org/stable/plugins/index.html
--->
 
 ## Installation
 
-You can install `napari-orientation` via [pip]:
+You can install the plugin from the napari GUI interface by going to ```Plugins/Install\Uninstall Plugins``` and selecting `napari-orientation` .
+Alternatively, you can install the plugin from the napari conda environment via [pip]:
 
 ```
 pip install napari-orientation
 ```
 
-If napari is not already installed, you can install `napari-orientation` with napari and Qt via:
+## Usage
 
-```
-pip install "napari-orientation[all]"
-```
+You can access all the functionalities of the plugin from the menu ```Plugins\Orientation Analysis```.
 
+All the analyses work only on single-channel 2D images and on single-channel 2D time series. 
+In this last case the analysis can be restricted to single frames.
 
 
 ## Contributing
@@ -51,7 +41,20 @@ Distributed under the terms of the [BSD-3] license,
 
 ## Issues
 
-If you encounter any problems, please [file an issue] along with a detailed description.
+If you encounter any problems, please file an issue along with a detailed description.
+
+----------------------------------
+
+This [napari] plugin was generated with [copier] using the [napari-plugin-template] (None).
+
+<!--
+Don't miss the full getting started guide to set up your new package:
+https://github.com/napari/napari-plugin-template#getting-started
+
+and review the napari docs for plugin developers:
+https://napari.org/stable/plugins/index.html
+-->
+
 
 [napari]: https://github.com/napari/napari
 [copier]: https://copier.readthedocs.io/en/stable/
