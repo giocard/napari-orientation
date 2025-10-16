@@ -14,7 +14,7 @@ A napari plugin to analyse local orientation in images.
 
 ## Installation
 
-You can install the plugin from the napari GUI interface by going to ```Plugins/Install\Uninstall Plugins``` and selecting `napari-orientation` .
+You can install the plugin from the napari GUI interface by going to ```Plugins/Install\Uninstall Plugins``` and selecting `napari-orientation`.
 Alternatively, you can install the plugin from the napari conda environment via [pip]:
 
 ```
@@ -25,7 +25,7 @@ pip install napari-orientation
 
 You can access all the functionalities of the plugin from the menu ```Plugins\Orientation Analysis```.
 
-All the analyses work only on single-channel 2D images and on single-channel 2D time series. 
+All the analyses work only on single-channel 2D images and on single-channel 2D time series.
 In this last case the analysis can be restricted to single frames.
 
 
@@ -43,7 +43,7 @@ Distributed under the terms of the [BSD-3] license,
 
 If you encounter any problems, please file an issue along with a detailed description.
 
-----------------------------------
+## Credits
 
 This [napari] plugin was generated with [copier] using the [napari-plugin-template] (None).
 

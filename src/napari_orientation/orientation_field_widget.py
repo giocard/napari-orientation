@@ -53,6 +53,7 @@ def vector_field_widget(
         np.stack([usub, vsub], axis=-1),
         (1, 0, 2),
     )
+    #vectors_field = np.stack([usub, vsub], axis=-1)
 
     return (
         vectors_field,
@@ -61,7 +62,8 @@ def vector_field_widget(
             "scale": [Step, Step],
             "translate": [offset, offset],
             "edge_width": 0.3,
-            "length": 0.6,
+            "length": 0.8,
+            "vector_style": "line",
         },
         "vectors",
     )
@@ -616,7 +618,7 @@ def compute_angle(orientation_field):
 def compute_coherence(eigenval_field):
     # Compute coherency map from eigenvalue field
     coherency = (eigenval_field[:, :, 1] - eigenval_field[:, :, 0]) / (
-        eigenval_field[:, :, 0] + eigenval_field[:, :, 1]
+        np.maximum(eigenval_field[:, :, 0] + eigenval_field[:, :, 1], 0.0001)
     )
     return coherency
 
