@@ -28,6 +28,44 @@ You can access all the functionalities of the plugin from the menu ```Plugins\Or
 All the analyses work only on single-channel 2D images and on single-channel 2D time series.
 In this last case the analysis can be restricted to single frames.
 
+The only parameter available is the sigma smoothing, in pixels, which controls the strength of the gaussian filter applied to the gradient of the image before computing the orientation vector pixelwise.
+
+### Compute orientation metrics
+
+This GUI gives access to most of the functionalities. You can compute several metrics and display them as images.
+
+#### Display Colored Orientation
+
+It computes an image where each pixel is colored differently according to the orientation angle estimated at that position.
+
+![Example colored orientation](docs/example_colored_orientation.png)
+
+#### Display Coherence
+
+It computes an image where the value of each pixel represents the coherence estimated at that position.
+
+![Example coherence](docs/example_coherence.png)
+
+#### Display Curvature
+
+It computes an image where the value of each pixel represents the curvature estimated at that position.
+
+![Example coherence](docs/example_curvature.png)
+
+#### Display Angle
+
+It computes an image where the value of each pixel represents the angle, in degrees, estimated at that position.
+
+![Example coherence](docs/example_angle.png)
+
+#### Compute statistics
+
+Estimate the average value for the following metrics: Energy, Coherence, Correlation length, Curvature. The curvature is the only metric in physical units, and therefore the determination of its values relies on the accuracy of the pixel size provided for the image.
+
+![Example statistics](docs/example_statistics.png)
+
+### Compute orientation metrics
+
 
 ## Contributing
 
@@ -46,6 +84,12 @@ If you encounter any problems, please file an issue along with a detailed descri
 ## Credits
 
 This [napari] plugin was generated with [copier] using the [napari-plugin-template] (None).
+
+This work was inspired by the plugin [OrientationJ] for ImageJ, that was partially converted by the same developers into a [plugin for napari](https://github.com/EPFL-Center-for-Imaging/napari-orientationpy).
+
+napari-orientation focuses on the computation of several metrics, some of them proposed in this [article](https://doi.org/10.1038/s41467-019-13702-4)
+
+
 
 <!--
 Don't miss the full getting started guide to set up your new package:
@@ -71,3 +115,5 @@ https://napari.org/stable/plugins/index.html
 [tox]: https://tox.readthedocs.io/en/latest/
 [pip]: https://pypi.org/project/pip/
 [PyPI]: https://pypi.org/
+
+[OrientationJ]: https://github.com/Biomedical-Imaging-Group/OrientationJ
