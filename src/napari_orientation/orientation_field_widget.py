@@ -45,24 +45,21 @@ def vector_field_widget(
 
     offset = Step // 2
     # Subsample orientation field for vector display
-    # Note: in napari, the y-axis is inverted compared to image coordinates
-    orientation_field = orientation_field[offset::Step, offset::Step, :]
-    usub = orientation_field[:, :, 0]
-    vsub = -orientation_field[:, :, 1]
-    vectors_field = np.transpose(  # transpose required — skimage bug?
-        np.stack([usub, vsub], axis=-1),
-        (1, 0, 2),
-    )
-    #vectors_field = np.stack([usub, vsub], axis=-1)
-
+    sampled_field = orientation_field[offset::Step, offset::Step, :]
+ 
+    usub = sampled_field[:, :, 0]
+    vsub = -sampled_field[:, :, 1]
+ 
+    vectors_field = np.stack([usub,vsub], axis=-1)
+ 
     return (
         vectors_field,
         {
             "name": f"{img_layer.name}{slice_pfx}_vectors_σ={Sigma_smoothing:.1f}",
             "scale": [Step, Step],
             "translate": [offset, offset],
-            "edge_width": 0.3,
-            "length": 0.8,
+            "edge_width": 0.2,
+            "length": 0.7,
             "vector_style": "line",
         },
         "vectors",
