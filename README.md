@@ -64,7 +64,12 @@ Estimate the average value for the following metrics: Energy, Coherence, Correla
 
 ![Example statistics](docs/example_statistics.png)
 
-### Compute orientation metrics
+### Generate vector-coded images
+It generates a vector layer displaying the orientation field estimated locally, over a grid with spacing defined by the user.
+
+![Example vectors](docs/example_vectors.png)
+
+This is a separate widget because it currently only works on single frames.
 
 
 ## Contributing
