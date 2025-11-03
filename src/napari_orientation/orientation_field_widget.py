@@ -179,12 +179,16 @@ class statistics_widget(Container):
                     del angle_map_rgb
                     return None
 
-        self._viewer.add_image(
+        layer = self._viewer.add_image(
             angle_map_rgb,
             name=f"{image_layer.name}{slice_pfx}_colored_σ={sigma:.1f}",
-            colormap="gray",
+            rgb=True,
+            colormap="hsv",
         )
 
+        # make colorbar visible in this case
+        #layer.colorbar.visible = True
+ 
         return
 
     def _compute_coherence_image(self):
