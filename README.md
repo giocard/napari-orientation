@@ -35,13 +35,13 @@ This GUI gives access to most of the functionalities. You can compute several me
 
 Definitions:
 
-* Orientation vector: unitary vector describing the average orientation of the gradient of the intensity around a point in the image. Computationally this is obtained by determining the first eigenvector (i.e. largest eigenvalue) of the structure tensor matrix.
-* Orientation field: mapping of the orientation vectors at each point in the image.
-* Angle field: mapping of the orientation angle at each point in the image
-* Energy: sum of the tensor eigenvalues.
-* Coherence: ratio between the difference and the sum of the maximum and minimum tensor eigenvalues.
-* Curvature: rate of change in the local orientation in the direction perpendicular to that orientation.
-* Correlation length: distance where the radial autocorrelation of the angle field drops below 0.5
+* __Orientation vector__: unitary vector describing the average orientation of the gradient of the intensity around a point in the image. Computationally this is obtained by determining the first eigenvector (i.e. largest eigenvalue) of the structure tensor matrix.
+* __Orientation field__: mapping of the orientation vectors at each point in the image.
+* __Angle field__: mapping of the orientation angle at each point in the image
+* __Energy__: sum of the tensor eigenvalues.
+* __Coherence__: ratio between the difference and the sum of the maximum and minimum tensor eigenvalues.
+* __Curvature__: rate of change in the local orientation in the direction perpendicular to that orientation.
+* __Correlation length__: distance where the radial autocorrelation of the angle field drops below 0.5
 
 #### Display Colored Orientation
 
