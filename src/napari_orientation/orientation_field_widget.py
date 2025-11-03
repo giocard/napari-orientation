@@ -51,6 +51,10 @@ def vector_field_widget(
     vsub = -sampled_field[:, :, 1]
  
     vectors_field = np.stack([usub,vsub], axis=-1)
+
+    # make sure grid is off
+    #viewer = napari.current_viewer()
+    #viewer.grid.enabled = False
  
     return (
         vectors_field,

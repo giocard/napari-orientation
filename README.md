@@ -11,13 +11,12 @@
 
 A napari plugin to analyse local orientation in images.
 
-
 ## Installation
 
 You can install the plugin from the napari GUI interface by going to ```Plugins/Install\Uninstall Plugins``` and selecting `napari-orientation`.
 Alternatively, you can install the plugin from the napari conda environment via [pip]:
 
-```
+```text
 pip install napari-orientation
 ```
 
@@ -33,6 +32,16 @@ The only parameter available is the sigma smoothing, in pixels, which controls t
 ### Compute orientation metrics
 
 This GUI gives access to most of the functionalities. You can compute several metrics and display them as images.
+
+Definitions:
+
+* Orientation vector: unitary vector describing the average orientation of the gradient of the intensity around a point in the image. Computationally this is obtained by determining the first eigenvector (i.e. largest eigenvalue) of the structure tensor matrix.
+* Orientation field: mapping of the orientation vectors at each point in the image.
+* Angle field: mapping of the orientation angle at each point in the image
+* Energy: sum of the tensor eigenvalues.
+* Coherence: ratio between the difference and the sum of the maximum and minimum tensor eigenvalues.
+* Curvature: rate of change in the local orientation in the direction perpendicular to that orientation.
+* Correlation length: distance where the radial autocorrelation of the angle field drops below 0.5
 
 #### Display Colored Orientation
 
@@ -65,12 +74,12 @@ Estimate the average value for the following metrics: Energy, Coherence, Correla
 ![Example statistics](docs/example_statistics.png)
 
 ### Generate vector-coded images
+
 It generates a vector layer displaying the orientation field estimated locally, over a grid with spacing defined by the user.
 
 ![Example vectors](docs/example_vectors.png)
 
 This is a separate widget because it currently only works on single frames.
-
 
 ## Contributing
 
@@ -94,8 +103,6 @@ This work was inspired by the plugin [OrientationJ] for ImageJ, that was partial
 
 napari-orientation focuses on the computation of several metrics, some of them proposed in this [article](https://doi.org/10.1038/s41467-019-13702-4)
 
-
-
 <!--
 Don't miss the full getting started guide to set up your new package:
 https://github.com/napari/napari-plugin-template#getting-started
@@ -104,21 +111,10 @@ and review the napari docs for plugin developers:
 https://napari.org/stable/plugins/index.html
 -->
 
-
 [napari]: https://github.com/napari/napari
 [copier]: https://copier.readthedocs.io/en/stable/
-[@napari]: https://github.com/napari
-[MIT]: http://opensource.org/licenses/MIT
 [BSD-3]: http://opensource.org/licenses/BSD-3-Clause
-[GNU GPL v3.0]: http://www.gnu.org/licenses/gpl-3.0.txt
-[GNU LGPL v3.0]: http://www.gnu.org/licenses/lgpl-3.0.txt
-[Apache Software License 2.0]: http://www.apache.org/licenses/LICENSE-2.0
-[Mozilla Public License 2.0]: https://www.mozilla.org/media/MPL/2.0/index.txt
 [napari-plugin-template]: https://github.com/napari/napari-plugin-template
-
-[napari]: https://github.com/napari/napari
 [tox]: https://tox.readthedocs.io/en/latest/
 [pip]: https://pypi.org/project/pip/
-[PyPI]: https://pypi.org/
-
 [OrientationJ]: https://github.com/Biomedical-Imaging-Group/OrientationJ
