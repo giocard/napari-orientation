@@ -189,6 +189,41 @@ class statistics_widget(Container):
         # make colorbar visible in this case
         #layer.colorbar.visible = True
  
+        # generate custom colorbar for orientation
+        def make_orientation_colorbar(viewer=self._viewer):
+            from qtpy.QtWidgets import QVBoxLayout, QWidget
+            from vispy import scene
+            import vispy.color as vpcolor
+            from vispy.scene import widgets
+
+            for dwk in self._viewer.window.dock_widgets.keys():
+                if dwk == 'Orientation angle (degrees)':
+                    return
+
+            cbCanvas = scene.SceneCanvas()
+            cbCmap = vpcolor.get_colormap('hsv')
+            cbColorbar = widgets.ColorBarWidget(cbCmap, 'right', "", 'white',
+                    clim=(-90, 90),
+                    border_width=1.,
+#                    border_color='yellow',
+                    padding=(.4, .4),
+                    axis_ratio=0.1
+                    )
+#            cbColorbar.ticks = ['-90', '-45', '0', '45', '90']
+            cbCanvas.central_widget.add_widget(cbColorbar)
+
+            layout = QVBoxLayout()
+            cb_widget = QWidget()
+            layout.addWidget(cbCanvas.native)
+            cb_widget.setLayout(layout)
+            cb_widget.setMinimumHeight(200)
+
+            viewer.window.add_dock_widget(cb_widget, name='Orientation angle (degrees)', area = 'right')
+
+            return
+        
+        cb_widget = make_orientation_colorbar()
+
         return
 
     def _compute_coherence_image(self):
