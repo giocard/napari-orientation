@@ -140,7 +140,23 @@ class statistics_widget(Container):
             ]
         )
 
+        # Connect the change event
+        self._image_layer_combo.changed.connect(self._on_image_layer_change)
+
+        # Set initial value according to current selection
+        self._on_image_layer_change(self._image_layer_combo.value)
+
         return
+
+    def _on_image_layer_change(self, value):
+        """Update pixel_size when the selected image layer changes."""
+        image_layer = value
+        if image_layer is not None and hasattr(image_layer, 'scale'):
+            # Typically, image_layer.scale is a tuple of floats representing pixel size in each dimension
+            self.pixel_size.value = float(image_layer.scale[-1])
+        else:
+            # Fallback value if no image_layer
+            self.pixel_size.value = 1.0
 
     def _compute_colored_image(self):
         from napari.utils import cancelable_progress
@@ -279,6 +295,7 @@ class statistics_widget(Container):
         if image_layer is None:
             return
 
+        print(image_layer.scale[-1])
         input_image = image_layer.data
         sigma = self.sigma.value
         only_current_slice = self.single_frame.value
