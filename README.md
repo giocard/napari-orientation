@@ -69,7 +69,9 @@ It computes an image where the value of each pixel represents the angle, in degr
 
 #### Compute statistics
 
-Estimate the average value for the following metrics: Energy, Coherence, Correlation length, Curvature. Note that Correlation length and Curvature metrics are both provided in physical units, and therefore their determination relies on the accuracy of the pixel size provided for the image. Using the napari-bioformats to open the images should guarantee that the pixel size stored in the file metadata is properly read by the plugin.
+Estimate the average value for the following metrics: Energy, Coherence, Correlation length, Curvature.
+
+Note that Correlation length and Curvature metrics are both provided in physical units, and therefore their determination relies on the accuracy of the pixel size provided for the image. Using the napari-bioformats to open the images should guarantee that the pixel size stored in the file metadata is properly read by the plugin. In any case it always possible to adjust the pixel size from the interface.
 
 ![Example statistics](docs/example_statistics.png)
 
