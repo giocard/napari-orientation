@@ -29,6 +29,8 @@ In this last case the analysis can be restricted to single frames.
 
 The only parameter available is the sigma smoothing, in pixels, which controls the strength of the gaussian filter applied to the gradient of the image before computing the orientation vector pixelwise.
 
+Currently two widgets are available: __Compute orientation metrics__ and __Generate vector-coded images__
+
 ### Compute orientation metrics
 
 This GUI gives access to most of the functionalities. You can compute several metrics and display them as images.
@@ -81,7 +83,6 @@ It generates a vector layer displaying the orientation field estimated locally, 
 
 ![Example vectors](docs/example_vectors.png)
 
-This is a separate widget because it currently only works on single frames.
 
 ## Contributing
 

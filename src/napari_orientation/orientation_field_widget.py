@@ -18,8 +18,10 @@ def vector_field_widget(
     img_layer: Image,
     Sigma_smoothing: int = 4,  # Gaussian smoothing sigma for structure tensor
     Step: int = 10,  # subsampling step for vector field
+    Only_visible_frame: bool = True,  # only current frame
 ) -> napari.types.LayerDataTuple:
     from napari.utils.notifications import show_info
+    from napari.utils import cancelable_progress
 
     input_image = img_layer.data
     if len(input_image.shape) > 3:
@@ -33,24 +35,30 @@ def vector_field_widget(
         )
         return
 
-    slice_pfx = ""
-    if input_image.ndim == 3:
-        this_slice = int(img_layer._slice.slice_input.world_slice.point[0])
-        input_image = input_image[this_slice]
-        slice_pfx = f"_slice{this_slice}"
+    input_image, twod_analysis, this_slice, slice_pfx = extract_image(
+            input_image, Only_visible_frame, img_layer
+        )
 
-    orientation_field, eigenval_field = compute_orientation_field(
-        input_image, sigma=Sigma_smoothing
-    )
+    # If the image is 2D, process as a single slice
+    if twod_analysis:
+            vectors_field = compute_vector_field(input_image, sigma=Sigma_smoothing, step=Step)
+            scale = [Step, Step]
+            translate = [Step//2, Step//2]
+    # If the image is 3D, process slice by slice along the first axis
+    else:
+        with cancelable_progress(input_image, miniters=5) as pbr:
+            for i, im_slice in enumerate(pbr):
+                this_vectors_field = compute_vector_field(im_slice, sigma=Sigma_smoothing, step=Step)
+                if i==0:
+                    vectors_field = np.zeros( (input_image.shape[0], this_vectors_field.shape[0], this_vectors_field.shape[1], 3), dtype=this_vectors_field.dtype)
+                vectors_field[i,:,:,1:3] = this_vectors_field[:,:,0:2]
 
-    offset = Step // 2
-    # Subsample orientation field for vector display
-    sampled_field = orientation_field[offset::Step, offset::Step, :]
- 
-    usub = sampled_field[:, :, 0]
-    vsub = -sampled_field[:, :, 1]
- 
-    vectors_field = np.stack([usub,vsub], axis=-1)
+            if pbr.is_canceled:
+                show_info("Operation canceled - no image generated!")
+                del vectors_field
+                return None
+        scale = [1, Step, Step]
+        translate = [0, Step//2, Step//2]
 
     # make sure grid is off
     #viewer = napari.current_viewer()
@@ -60,8 +68,8 @@ def vector_field_widget(
         vectors_field,
         {
             "name": f"{img_layer.name}{slice_pfx}_vectors_σ={Sigma_smoothing:.1f}",
-            "scale": [Step, Step],
-            "translate": [offset, offset],
+            "scale": scale,
+            "translate": translate,
             "edge_width": 0.2,
             "length": 0.7,
             "vector_style": "line",
@@ -295,7 +303,6 @@ class statistics_widget(Container):
         if image_layer is None:
             return
 
-        print(image_layer.scale[-1])
         input_image = image_layer.data
         sigma = self.sigma.value
         only_current_slice = self.single_frame.value
@@ -497,6 +504,21 @@ def extract_image(input_image, only_current_slice, image_layer):
         this_slice = -1
 
     return input_image, twod_analysis, this_slice, slice_pfx
+
+
+def compute_vector_field(inimage, sigma=4, step=10):
+    orientation_field, eigenval_field = compute_orientation_field(inimage, sigma=sigma)
+
+    offset = step // 2
+    # Subsample orientation field for vector display
+    sampled_field = orientation_field[offset::step, offset::step, :]
+
+    usub = sampled_field[:, :, 0]
+    vsub = -sampled_field[:, :, 1]
+
+    vectors_field = np.stack([usub,vsub], axis=-1)
+
+    return vectors_field
 
 
 def compute_image_orientation_statistics(
