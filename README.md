@@ -83,7 +83,6 @@ It generates a vector layer displaying the orientation field estimated locally, 
 
 ![Example vectors](docs/example_vectors.png)
 
-
 ## Contributing
 
 Contributions are very welcome. Tests can be run with [tox], please ensure

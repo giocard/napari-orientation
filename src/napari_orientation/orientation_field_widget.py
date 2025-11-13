@@ -35,15 +35,18 @@ def vector_field_widget(
         )
         return
 
-    input_image, twod_analysis, this_slice, slice_pfx = extract_image(
+    input_image, this_slice, slice_pfx = extract_image(
             input_image, Only_visible_frame, img_layer
         )
 
     # If the image is 2D, process as a single slice
-    if twod_analysis:
+    if input_image.ndim==2:
             vectors_field = compute_vector_field(input_image, sigma=Sigma_smoothing, step=Step)
             scale = [Step, Step]
             translate = [Step//2, Step//2]
+            if img_layer is not None and hasattr(img_layer, 'scale'):
+                scale = [img_layer.scale[-1]*scale[0], img_layer.scale[-2]*scale[1]]
+                translate = [img_layer.scale[-1]*translate[0], img_layer.scale[-2]*translate[1]]
     # If the image is 3D, process slice by slice along the first axis
     else:
         with cancelable_progress(input_image, miniters=5) as pbr:
@@ -59,6 +62,9 @@ def vector_field_widget(
                 return None
         scale = [1, Step, Step]
         translate = [0, Step//2, Step//2]
+        if img_layer is not None and hasattr(img_layer, 'scale'):
+            scale = [img_layer.scale[0], img_layer.scale[1]*scale[1], img_layer.scale[2]*scale[2]]
+            translate = [translate[0], img_layer.scale[1]*translate[1], img_layer.scale[2]*translate[2]]
 
     # make sure grid is off
     #viewer = napari.current_viewer()
@@ -181,12 +187,12 @@ class statistics_widget(Container):
         if not is_image_valid(input_image):
             return
 
-        input_image, twod_analysis, this_slice, slice_pfx = extract_image(
+        input_image, this_slice, slice_pfx = extract_image(
             input_image, only_current_slice, image_layer
         )
 
         # If the image is 2D, process as a single slice
-        if twod_analysis:
+        if input_image.ndim==2:
             angle_map_rgb = compute_color_image(input_image, sigma=sigma)
         # If the image is 3D, process slice by slice along the first axis
         else:
@@ -208,6 +214,7 @@ class statistics_widget(Container):
             name=f"{image_layer.name}{slice_pfx}_colored_σ={sigma:.1f}",
             rgb=True,
             colormap="hsv",
+            scale = image_layer.scale[-input_image.ndim:],
         )
 
         # make colorbar visible in this case
@@ -265,12 +272,12 @@ class statistics_widget(Container):
         if not is_image_valid(input_image):
             return
 
-        input_image, twod_analysis, this_slice, slice_pfx = extract_image(
+        input_image, this_slice, slice_pfx = extract_image(
             input_image, only_current_slice, image_layer
         )
 
         # If the image is 2D, process as a single slice
-        if twod_analysis:
+        if input_image.ndim==2:
             coherence_map = compute_coherence_image(input_image, sigma=sigma)
         # If the image is 3D, process slice by slice along the first axis
         else:
@@ -291,6 +298,7 @@ class statistics_widget(Container):
             coherence_map,
             name=f"{image_layer.name}{slice_pfx}_coherence_σ={sigma:.1f}",
             colormap="magma",
+            scale = image_layer.scale[-input_image.ndim:],
         )
 
         return
@@ -311,12 +319,12 @@ class statistics_widget(Container):
         if not is_image_valid(input_image):
             return
 
-        input_image, twod_analysis, this_slice, slice_pfx = extract_image(
+        input_image, this_slice, slice_pfx = extract_image(
             input_image, only_current_slice, image_layer
         )
 
         # If the image is 2D, process as a single slice
-        if twod_analysis:
+        if input_image.ndim==2:
             curvature_map = compute_curvature_image(
                 input_image, pixel=pixel_size, sigma=sigma
             )
@@ -339,6 +347,7 @@ class statistics_widget(Container):
             curvature_map,
             name=f"{image_layer.name}{slice_pfx}_curvature_σ={sigma:.1f}",
             colormap="gray_r",
+            scale = image_layer.scale[-input_image.ndim:],
         )
 
         return
@@ -358,12 +367,12 @@ class statistics_widget(Container):
         if not is_image_valid(input_image):
             return
 
-        input_image, twod_analysis, this_slice, slice_pfx = extract_image(
+        input_image, this_slice, slice_pfx = extract_image(
             input_image, only_current_slice, image_layer
         )
 
         # If the image is 2D, process as a single slice
-        if twod_analysis:
+        if input_image.ndim==2:
             angle_map = compute_angle_image(input_image, sigma=sigma)
         # If the image is 3D, process slice by slice along the first axis
         else:
@@ -382,6 +391,7 @@ class statistics_widget(Container):
             angle_map,
             name=f"{image_layer.name}{slice_pfx}_angle_σ={sigma:.1f}",
             colormap="gray",
+            scale = image_layer.scale[-input_image.ndim:],
         )
 
         return
@@ -436,12 +446,12 @@ class statistics_widget(Container):
         if not is_image_valid(input_image):
             return
 
-        input_image, twod_analysis, this_slice, slice_pfx = extract_image(
+        input_image, this_slice, slice_pfx = extract_image(
             input_image, only_current_slice, image_layer
         )
 
         # If the image is 2D, process as a single slice
-        if twod_analysis:
+        if input_image.ndim==2:
             om = compute_image_orientation_statistics(
                 input_image, this_slice, pixel_size, sigma
             )
@@ -491,19 +501,16 @@ def is_image_valid(input_image):
 def extract_image(input_image, only_current_slice, image_layer):
     slice_pfx = ""
     if input_image.ndim == 2:
-        twod_analysis = True
         this_slice = 1
     elif input_image.ndim == 3 and only_current_slice:
         islice = int(image_layer._slice.slice_input.world_slice.point[0])
         input_image = input_image[islice]
         this_slice = islice + 1
         slice_pfx = f"_slice{this_slice}"
-        twod_analysis = True
     else:
-        twod_analysis = False
         this_slice = -1
 
-    return input_image, twod_analysis, this_slice, slice_pfx
+    return input_image, this_slice, slice_pfx
 
 
 def compute_vector_field(inimage, sigma=4, step=10):
