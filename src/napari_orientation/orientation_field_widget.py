@@ -20,17 +20,17 @@ def vector_field_widget(
     Step: int = 10,  # subsampling step for vector field
     Only_visible_frame: bool = True,  # only current frame
 ) -> napari.types.LayerDataTuple:
-    from napari.utils.notifications import show_info
+    from napari.utils.notifications import show_warning
     from napari.utils import cancelable_progress
 
     input_image = img_layer.data
     if len(input_image.shape) > 3:
-        show_info(
+        show_warning(
             f"Input image must be single-channel image or 2D time series. This image has {len(input_image.shape)} dimensions"
         )
         return
     if input_image.ndim == 3 and input_image.shape[-1] <= 3:
-        show_info(
+        show_warning(
             "Input image appears to be a RGB image. Please provide a single-channel image or time series."
         )
         return
@@ -57,7 +57,7 @@ def vector_field_widget(
                 vectors_field[i,:,:,1:3] = this_vectors_field[:,:,0:2]
 
             if pbr.is_canceled:
-                show_info("Operation canceled - no image generated!")
+                show_warning("Operation canceled - no image generated!")
                 del vectors_field
                 return None
         scale = [1, Step, Step]
@@ -174,7 +174,7 @@ class statistics_widget(Container):
 
     def _compute_colored_image(self):
         from napari.utils import cancelable_progress
-        from napari.utils.notifications import show_info
+        from napari.utils.notifications import show_warning
 
         image_layer = self._image_layer_combo.value
         if image_layer is None:
@@ -205,7 +205,7 @@ class statistics_widget(Container):
                         im_slice, sigma=sigma
                     )
                 if pbr.is_canceled:
-                    show_info("Operation canceled - no image generated!")
+                    show_warning("Operation canceled - no image generated!")
                     del angle_map_rgb
                     return None
 
@@ -259,7 +259,7 @@ class statistics_widget(Container):
 
     def _compute_coherence_image(self):
         from napari.utils import cancelable_progress
-        from napari.utils.notifications import show_info
+        from napari.utils.notifications import show_warning
 
         image_layer = self._image_layer_combo.value
         if image_layer is None:
@@ -290,7 +290,7 @@ class statistics_widget(Container):
                         im_slice, sigma=sigma
                     )
                 if pbr.is_canceled:
-                    show_info("Operation canceled - no image generated!")
+                    show_warning("Operation canceled - no image generated!")
                     del coherence_map
                     return None
 
@@ -305,7 +305,7 @@ class statistics_widget(Container):
 
     def _compute_curvature_image(self):
         from napari.utils import cancelable_progress
-        from napari.utils.notifications import show_info
+        from napari.utils.notifications import show_warning
 
         image_layer = self._image_layer_combo.value
         if image_layer is None:
@@ -339,7 +339,7 @@ class statistics_widget(Container):
                         im_slice, sigma=sigma
                     )
                 if pbr.is_canceled:
-                    show_info("Operation canceled - no image generated!")
+                    show_warning("Operation canceled - no image generated!")
                     del curvature_map
                     return None
 
@@ -354,7 +354,7 @@ class statistics_widget(Container):
 
     def _compute_angle_image(self):
         from napari.utils import cancelable_progress
-        from napari.utils.notifications import show_info
+        from napari.utils.notifications import show_warning
 
         image_layer = self._image_layer_combo.value
         if image_layer is None:
@@ -383,7 +383,7 @@ class statistics_widget(Container):
                 for i, im_slice in enumerate(pbr):
                     angle_map[i] = compute_angle_image(im_slice, sigma=sigma)
                 if pbr.is_canceled:
-                    show_info("Operation canceled - no image generated!")
+                    show_warning("Operation canceled - no image generated!")
                     del angle_map
                     return None
 
@@ -397,14 +397,14 @@ class statistics_widget(Container):
         return
 
     def _save_table(self):
-        from napari.utils.notifications import show_info
+        from napari.utils.notifications import show_info, show_warning
         from qtpy.QtWidgets import QFileDialog
 
         # test if empty either before or after the conversion to dataframe
         if self.table.shape[0] < 1 or (
             self.table.shape[0] == 1 and not self.table["Frame"][0]
         ):
-            show_info("No data in the table to save!")
+            show_warning("No data in the table to save!")
             return
 
         df = self.table.to_dataframe()
@@ -426,13 +426,13 @@ class statistics_widget(Container):
                 df.to_csv(filePath, index=False)
                 show_info(f"Table saved to {filePath}")
             except:
-                show_info(f"Failed to save table to {filePath}")
+                show_warning(f"Failed to save table to {filePath}")
                 raise
         return
 
     def _compute_statistics(self):
         from napari.utils import cancelable_progress
-        from napari.utils.notifications import show_info
+        from napari.utils.notifications import show_warning
 
         image_layer = self._image_layer_combo.value
         if image_layer is None:
@@ -472,7 +472,7 @@ class statistics_widget(Container):
                     timedata.append(om._asdict())
                     self.table.set_value(timedata)
             if pbr.is_canceled:
-                show_info("Operation canceled!")
+                show_warning("Operation canceled!")
                 return None
 
         return
@@ -482,15 +482,15 @@ class statistics_widget(Container):
 
 
 def is_image_valid(input_image):
-    from napari.utils.notifications import show_info
+    from napari.utils.notifications import show_warning
 
     if len(input_image.shape) > 3:
-        show_info(
+        show_warning(
             f"Input image must be single-channel image or 2D time series. This image has {len(input_image.shape)} dimensions"
         )
         return False
     if input_image.ndim == 3 and input_image.shape[-1] <= 3:
-        show_info(
+        show_warning(
             "Input image appears to be a RGB image. Please provide a single-channel image or time series."
         )
         return False
