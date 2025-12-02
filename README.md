@@ -2,6 +2,7 @@
 
 [![License BSD-3](https://img.shields.io/pypi/l/napari-orientation.svg?color=green)](https://github.com/giocard/napari-orientation/raw/main/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/napari-orientation.svg?color=green)](https://pypi.org/project/napari-orientation)
+[![Python package index download statistics](https://img.shields.io/pypi/dm/napari-orientation.svg)](https://pypistats.org/packages/napari-orientation)
 [![Python Version](https://img.shields.io/pypi/pyversions/napari-orientation.svg?color=green)](https://python.org)
 [![tests](https://github.com/giocard/napari-orientation/workflows/tests/badge.svg)](https://github.com/giocard/napari-orientation/actions)
 [![codecov](https://codecov.io/gh/giocard/napari-orientation/branch/main/graph/badge.svg)](https://codecov.io/gh/giocard/napari-orientation)
