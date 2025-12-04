@@ -217,51 +217,75 @@ class statistics_widget(Container):
             scale = image_layer.scale[-input_image.ndim:],
         )
 
-        # make colorbar visible in this case
-        #layer.colorbar.visible = True
-        
-        cb_widget = self._make_orientation_colorbar()
+        self._make_orientation_colorbar()
 
         return
 
-    # generate custom colorbar for orientation
     def _make_orientation_colorbar(self):
+        ''' generate custom colorbar for orientation
+        '''
         from qtpy.QtWidgets import QVBoxLayout, QWidget
-        from vispy import scene
-        import vispy.color as vpcolor
-        from vispy.scene import widgets
+        from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+        from matplotlib.figure import Figure
+        import matplotlib.pyplot as plt
+        from matplotlib.ticker import FuncFormatter
 
+        # Check if widget already exists
         for dwk in self._viewer.window.dock_widgets.keys():
             if dwk == 'Orientation angle (degrees)':
                 return
+        
+        # Create matplotlib figure
+        fig = Figure(figsize=(4, 4))
+        canvas = FigureCanvasQTAgg(fig)
+        
+        # Create colorbar
+        ax = fig.add_axes([0.4, 0.05, 0.1, 0.9])
+        
+        # Create colormap and normalization
+        cmap = plt.cm.hsv
+        norm = plt.Normalize(vmin=-90, vmax=90)
+        
+        # Create colorbar
+        cb = plt.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=cmap),
+                        cax=ax,
+                        orientation='vertical')
+        #cb.set_label('Angle (degrees)', color='white')
 
-        cbCanvas = scene.SceneCanvas()
-        cbCmap = vpcolor.get_colormap('hsv')
-        cbColorbar = widgets.ColorBarWidget(cbCmap, 'right', "", 'white',
-                clim=(-90, 90),
-                border_width=1.,
-    #                    border_color='yellow',
-                padding=(.4, .4),
-                axis_ratio=0.1
-                )
-    #            cbColorbar.ticks = ['-90', '-45', '0', '45', '90']
-        cbCanvas.central_widget.add_widget(cbColorbar)
+        # Set custom tick values
+        cb.set_ticks([-90, -60, -30, 0, 30, 60, 90])
 
+        # Add degree symbol to tick labels
+        def format_func(value, tick_number):
+            return f'{int(value)}°'
+    
+        cb.ax.yaxis.set_major_formatter(FuncFormatter(format_func))
+
+        cb.ax.yaxis.set_tick_params(color='white', pad=24)
+        
+        # Align tick labels to the right
+        for label in cb.ax.yaxis.get_ticklabels():
+            label.set_horizontalalignment('right')
+            label.set_color('white')
+
+        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color='white')
+        
+        fig.patch.set_facecolor('#262930')  # napari's background color
+        ax.set_facecolor('#262930')
+        
+        # Create widget
         layout = QVBoxLayout()
         cb_widget = QWidget()
-        layout.addWidget(cbCanvas.native)
+        layout.addWidget(canvas)
         cb_widget.setLayout(layout)
         cb_widget.setMinimumHeight(200)
-
-        # keep a strong reference to the canvas and widget
-        #self.cbCanvas = cbCanvas
-        #self.cb_widget = cb_widget
-        #self.cbColorbar = cbColorbar
-
-        #cb_widget.setParent(self._viewer.window._qt_window)  # Use napari’s Qt main window
-
-        self._viewer.window.add_dock_widget(cb_widget, name='Orientation angle (degrees)', area = 'right')#, add_vertical_stretch=True)
-
+        
+        self._viewer.window.add_dock_widget(
+            cb_widget, 
+            name='Orientation angle (degrees)', 
+            area='right'
+        )
+    
         return
 
     def _compute_coherence_image(self):
