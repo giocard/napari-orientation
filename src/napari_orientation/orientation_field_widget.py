@@ -572,9 +572,8 @@ def compute_image_orientation_statistics(
     )
     coherence_map = compute_coherence(eigenval_field)
     curvature_map = compute_curvature(orientation_field, pixel=pixel_size)
-    mean_curvature, fit_params, curvature_distribution = (
-        fit_curvature_distribution(curvature_map)
-    )
+    mean_curvature = fit_curvature_distribution(curvature_map)
+
     energy_map = compute_energy(eigenval_field)
     correlation_map = compute_orientation_correlation(orientation_field)
     correlation_curve, correlation_radius = radial_average(
@@ -647,31 +646,22 @@ def compute_curvature_image(inimage, pixel=1, sigma=0):
 
 
 def fit_curvature_distribution(curvature_map):
-    from scipy.optimize import curve_fit
-
-    def exp1_decay(x, a):
-        return a * np.exp(-a * x)
+    from scipy.stats import expon
 
     # Flatten and take absolute values
     data = np.abs(curvature_map.flatten())
     data = data[data > 0]  # Remove zeros
 
-    # Normalized Histogram
-    hist, bin_edges = np.histogram(data, bins=50, density=True)
-    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-    curvature_distribution = {
-        "bin_centers": bin_centers,
-        "hist": hist,
-        "bin_edges": bin_edges,
-    }
+    # Fit exponential with location fixed to 0
+    # assumed exponential distribution a*np.exp(-a*x)
+    loc, scale = expon.fit(data, floc=0)
+    a_est = 1.0 / scale  # rate = 1/scale
+    #note: MLE for exponential rate parameter a is also a_hat = 1.0 / np.mean(data)  
 
-    # Fit exponential decay
-    popt, _ = curve_fit(exp1_decay, bin_centers, hist, p0=(1))
+    # Mean half-life of decay is ln(2)/rate
+    mean_curvature = np.log(2) / a_est
 
-    # Mean half-life of decay is ln(2)/b
-    mean_curvature = np.log(2) / popt[0]
-
-    return mean_curvature, popt, curvature_distribution
+    return mean_curvature
 
 
 def compute_orientation_field(inimage, sigma=4):
