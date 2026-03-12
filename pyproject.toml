@@ -21,6 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Image Processing",
 ]
 requires-python = ">=3.10"
@@ -52,7 +53,6 @@ testing = [
 
 [project.entry-points."napari.manifest"]
 napari-orientation = "napari_orientation:napari.yaml"
-
 
 
 [build-system]
