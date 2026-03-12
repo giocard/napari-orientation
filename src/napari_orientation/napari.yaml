@@ -1,7 +1,7 @@
 name: napari-orientation
 display_name: Orientation Analysis
 # use 'hidden' to remove plugin from napari hub search results
-visibility: hidden #public
+visibility: public
 # see https://napari.org/stable/plugins/technical_references/manifest.html#fields for valid categories
 categories:  ["Image Processing"]
 contributions:

@@ -225,7 +225,7 @@ class statistics_widget(Container):
         ''' generate custom colorbar for orientation
         '''
         from qtpy.QtWidgets import QVBoxLayout, QWidget
-        from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+        from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
         from matplotlib.figure import Figure
         import matplotlib.pyplot as plt
         from matplotlib.ticker import FuncFormatter
